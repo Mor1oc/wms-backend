@@ -3,8 +3,10 @@ package com.warehouse.WMS.warehouse.model;
 import com.warehouse.WMS.component.model.Component;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "warehouse")
 public class Warehouse {
@@ -32,4 +34,24 @@ public class Warehouse {
     @ManyToOne
     @JoinColumn(name = "component_id")
     private Component component;
+
+    public Warehouse(WarehouseDTO warehouseDTO) {
+        this.id = warehouseDTO.getId();
+        this.rack = warehouseDTO.getId();
+        this.section = warehouseDTO.getRack();
+        this.shelf = warehouseDTO.getSection();
+        this.cell = warehouseDTO.getShelf();
+        this.quantity = warehouseDTO.getCell();
+        this.component = new Component(warehouseDTO.getComponent());
+    }
+
+    public Warehouse(WarehouseDTO warehouseDTO, Component component) {
+        this.id = warehouseDTO.getId();
+        this.rack = warehouseDTO.getId();
+        this.section = warehouseDTO.getRack();
+        this.shelf = warehouseDTO.getSection();
+        this.cell = warehouseDTO.getShelf();
+        this.quantity = warehouseDTO.getCell();
+        this.component = component;
+    }
 }

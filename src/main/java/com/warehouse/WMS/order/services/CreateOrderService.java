@@ -65,7 +65,12 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
         }
         List<ComponentQuantity> componentQuantities = new ArrayList<>();
         for (int i = 0; i < numberOfComponents; i++) {
-            componentQuantities.add(new ComponentQuantity(componentQuantityKeys.get(i), order, components.get(i), order.getComponents().get(i).getQuantity()));
+            componentQuantities.add(new ComponentQuantity(
+                    componentQuantityKeys.get(i),
+                    order, 
+                    components.get(i),
+                    order.getComponents().get(i).getQuantity()
+            ));
         }
         componentQuantityRepository.saveAll(componentQuantities);
         order.setComponents(componentQuantities);
