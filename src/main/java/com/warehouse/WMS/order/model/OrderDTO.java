@@ -2,26 +2,22 @@ package com.warehouse.WMS.order.model;
 
 import com.warehouse.WMS.component.model.ComponentDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class OrderDTO {
 
     private Integer id;
-
     private LocalDate orderDate;
-
     private LocalDate deliveryDate;
-
     private List<ComponentDTO> components;
-
     private List<Integer> quantities;
-
     private int totalQuantity;
-
-    private OrderStatus status;
+    private String status;
 
     public OrderDTO(Order order) {
         this.id = order.getId();
@@ -40,6 +36,6 @@ public class OrderDTO {
                 .stream()
                 .map(ComponentQuantity::getQuantity)
                 .reduce(0, Integer::sum);
-        this.status = order.getStatus().getStatus();
+        this.status = order.getStatus().getStatus().getTitle();
     }
 }

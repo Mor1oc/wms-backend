@@ -2,9 +2,11 @@ package com.warehouse.WMS.order.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "status")
 public class Status {
     @Id
@@ -14,17 +16,17 @@ public class Status {
 
     /**
      * "Запланирован" -- 1
-     * "Процессор" -- 2
+     * "В исполнении" -- 2
      * "Отменен" -- 3
      * "Завершен" -- 4
      * "Готовится к отправке" -- 5
      * */
-    // insert into status (id, status.status)
-    //values (1, "Запланирован"),
-    //(2, "В исполнении"),
-    //(3, "Отменен"),
-    //(4, "Готовится к отправке"),
-    //(5, "Завершен");
+//     insert into status (id, status.status)
+//    values (1, "Запланирован"),
+//    (2, "В исполнении"),
+//    (3, "Отменен"),
+//    (4, "Готовится к отправке"),
+//    (5, "Завершен");
 
     @Convert(converter = OrderStatusConverter.class)
     @Column(name = "status")

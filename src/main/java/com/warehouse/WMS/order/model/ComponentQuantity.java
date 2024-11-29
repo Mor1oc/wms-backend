@@ -3,8 +3,10 @@ package com.warehouse.WMS.order.model;
 import com.warehouse.WMS.component.model.Component;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "component_order")
 public class ComponentQuantity {

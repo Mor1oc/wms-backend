@@ -1,7 +1,5 @@
 package com.warehouse.WMS.order.model;
 
-import com.warehouse.WMS.component.model.ComponentCategory;
-
 public enum OrderStatus {
     PLANED("Запланирован"),
     IN_PROGRESS("В исполнении"),
@@ -26,6 +24,23 @@ public enum OrderStatus {
             case "Отменен" -> CANCELLED;
             case "Завершен" -> COMPLETED;
             case "Готовится к отправке" -> PREPARING;
+            default -> null;
+        };
+    }
+    /**
+     * "Запланирован" -- 1
+     * "В исполнении" -- 2
+     * "Отменен" -- 3
+     * "Завершен" -- 4
+     * "Готовится к отправке" -- 5
+     * */
+    public static Integer fromStringToId(String status) {
+        return switch (status) {
+            case "Запланирован" -> 1;
+            case "В исполнении" -> 2;
+            case "Отменен" -> 3;
+            case "Завершен" -> 4;
+            case "Готовится к отправке" -> 5;
             default -> null;
         };
     }

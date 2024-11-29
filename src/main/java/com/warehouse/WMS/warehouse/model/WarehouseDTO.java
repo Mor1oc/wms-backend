@@ -2,8 +2,10 @@ package com.warehouse.WMS.warehouse.model;
 
 import com.warehouse.WMS.component.model.ComponentDTO;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class WarehouseDTO {
     private Integer id;
     private int rack;

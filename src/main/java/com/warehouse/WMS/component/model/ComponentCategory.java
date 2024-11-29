@@ -35,7 +35,7 @@ public enum ComponentCategory {
             case "Клавиатура" -> KEYBOARD;
             case "Блок питания" -> POWER_SUPPLY_UNIT;
             case "Корпус" -> COMPUTER_CASE;
-            case "Система охлождения" -> COOLING;
+            case "Система охлаждения" -> COOLING;
             default -> null;
         };
     }

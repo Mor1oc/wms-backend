@@ -69,7 +69,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
                     componentQuantityKeys.get(i),
                     order, 
                     components.get(i),
-                    order.getComponents().get(i).getQuantity()
+                    orderDTO.getQuantities().get(i)
             ));
         }
         componentQuantityRepository.saveAll(componentQuantities);

@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorMessages {
-    COMPONENT_NOT_FOUND("Комплектующее не найдено");
+    COMPONENT_NOT_FOUND("Комплектующее не найдено"),
+    WAREHOUSE_NOT_FOUND("Комплектующее не найдено на складе");
 
     private final String message;
 
