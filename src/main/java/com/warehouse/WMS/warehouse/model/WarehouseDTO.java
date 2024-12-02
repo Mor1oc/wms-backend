@@ -3,6 +3,7 @@ package com.warehouse.WMS.warehouse.model;
 import com.warehouse.WMS.component.model.ComponentDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +24,18 @@ public class WarehouseDTO {
         this.cell = warehouse.getCell();
         this.quantity = warehouse.getQuantity();
         this.component = new ComponentDTO(warehouse.getComponent());
+    }
+
+    @Override
+    public String toString() {
+        return "WarehouseDTO{" +
+                "id=" + id +
+                ", rack=" + rack +
+                ", section=" + section +
+                ", shelf=" + shelf +
+                ", cell=" + cell +
+                ", quantity=" + quantity +
+                ", component=" + component +
+                '}';
     }
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -48,6 +49,18 @@ public class Component {
         this.manufacture = componentDTO.getManufacture();
         this.model = componentDTO.getModel();
         this.price = componentDTO.getPrice();
+    }
+
+    @Override
+    public String toString() {
+        return "Component{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", category=" + category +
+                ", manufacture='" + manufacture + '\'' +
+                ", model='" + model + '\'' +
+                ", price=" + price +
+                '}';
     }
 }
 

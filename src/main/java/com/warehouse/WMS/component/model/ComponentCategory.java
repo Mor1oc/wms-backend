@@ -11,7 +11,7 @@ public enum ComponentCategory {
     KEYBOARD("Клавиатура"),
     POWER_SUPPLY_UNIT("Блок питания"),
     COMPUTER_CASE("Корпус"),
-    COOLING("Система охлождения");
+    COOLING("Система охлаждения");
 
     private final String title;
 

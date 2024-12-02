@@ -1,15 +1,19 @@
 package com.warehouse.WMS.order.services;
 
 import com.warehouse.WMS.Command;
-import com.warehouse.WMS.component.ComponentRepository;
 import com.warehouse.WMS.component.model.Component;
 import com.warehouse.WMS.component.model.ComponentDTO;
+import com.warehouse.WMS.component.services.CreateAllComponentsService;
+import com.warehouse.WMS.component.services.GetComponentsByModelService;
+import com.warehouse.WMS.exceptions.WarehouseNotFoundException;
 import com.warehouse.WMS.order.ComponentQuantityRepository;
 import com.warehouse.WMS.order.OrderRepository;
 import com.warehouse.WMS.order.model.ComponentQuantity;
 import com.warehouse.WMS.order.model.ComponentQuantityKey;
 import com.warehouse.WMS.order.model.Order;
 import com.warehouse.WMS.order.model.OrderDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +24,19 @@ import java.util.List;
 @Service
 public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
     private final OrderRepository orderRepository;
-    private final ComponentRepository componentRepository;
+    private final GetComponentsByModelService getComponentsByModelService;
+    private final CreateAllComponentsService createAllComponentsService;
     private final ComponentQuantityRepository componentQuantityRepository;
 
+    private static final Logger logger = LoggerFactory.getLogger(CreateOrderService.class);
+
     public CreateOrderService(OrderRepository orderRepository,
-                              ComponentRepository componentRepository,
+                              GetComponentsByModelService getComponentsByModelService,
+                              CreateAllComponentsService createAllComponentsService,
                               ComponentQuantityRepository componentQuantityRepository) {
         this.orderRepository = orderRepository;
-        this.componentRepository = componentRepository;
+        this.getComponentsByModelService = getComponentsByModelService;
+        this.createAllComponentsService = createAllComponentsService;
         this.componentQuantityRepository = componentQuantityRepository;
     }
 
@@ -38,23 +47,27 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
                 .stream()
                 .map(ComponentDTO::getModel)
                 .toList();
-        List<Component> components = componentRepository.findByModelIn(componentModels);
+        logger.info("Получение всех комплектующих заказа, которые уже есть в базе данных");
+        List<Component> components = getComponentsByModelService.execute(componentModels);
         if (components.isEmpty()) {
+            logger.info("Преобразование всех ComponentDTO в Component");
             components = orderComponents
                     .stream()
                     .map(Component::new)
                     .toList();
-            components = componentRepository.saveAll(components);
+            components = createAllComponentsService.execute(components);
         } else if (components.size() < componentModels.size()) {
+            logger.info("Выявление всех комплетующих, что нет в базе данных");
             var modelsInOrder = new HashSet<>(componentModels);
             var componentsNotInDb = orderComponents
                     .stream()
                     .map(Component::new)
                     .filter((component) -> !(modelsInOrder.contains(component.getModel())))
                     .toList(); // Находим комплектующие, которых нет в базе данных
-            components = componentRepository.saveAll(componentsNotInDb);
+            components = createAllComponentsService.execute(componentsNotInDb);
             components.addAll(componentsNotInDb);
         }
+        logger.info("Устанавливание связей между таблицами заказа и комплектующего");
         var order = new Order(orderDTO);
         order = orderRepository.save(order);
         var orderId = order.getId();
@@ -74,6 +87,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
         }
         componentQuantityRepository.saveAll(componentQuantities);
         order.setComponents(componentQuantities);
+        logger.info("Сохрание заказа в базу данных");
         orderRepository.save(order);
         return ResponseEntity.ok(new OrderDTO(order));
     }
