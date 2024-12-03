@@ -32,6 +32,10 @@ public class Order {
     @JoinColumn(name = "status_id")
     private Status status;
 
+    public Order() {
+
+    }
+
     public Order(OrderDTO orderDTO) {
         this.id = orderDTO.getId();
         this.orderDate = orderDTO.getOrderDate();

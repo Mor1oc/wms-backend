@@ -5,7 +5,6 @@ import com.warehouse.WMS.component.model.Component;
 import com.warehouse.WMS.component.model.ComponentDTO;
 import com.warehouse.WMS.component.services.CreateAllComponentsService;
 import com.warehouse.WMS.component.services.GetComponentsByModelService;
-import com.warehouse.WMS.exceptions.WarehouseNotFoundException;
 import com.warehouse.WMS.order.ComponentQuantityRepository;
 import com.warehouse.WMS.order.OrderRepository;
 import com.warehouse.WMS.order.model.ComponentQuantity;
@@ -47,6 +46,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
                 .stream()
                 .map(ComponentDTO::getModel)
                 .toList();
+
         logger.info("Получение всех комплектующих заказа, которые уже есть в базе данных");
         List<Component> components = getComponentsByModelService.execute(componentModels);
         if (components.isEmpty()) {
@@ -56,6 +56,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
                     .map(Component::new)
                     .toList();
             components = createAllComponentsService.execute(components);
+
         } else if (components.size() < componentModels.size()) {
             logger.info("Выявление всех комплетующих, что нет в базе данных");
             var modelsInOrder = new HashSet<>(componentModels);
@@ -67,20 +68,23 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
             components = createAllComponentsService.execute(componentsNotInDb);
             components.addAll(componentsNotInDb);
         }
+
         logger.info("Устанавливание связей между таблицами заказа и комплектующего");
         var order = new Order(orderDTO);
         order = orderRepository.save(order);
         var orderId = order.getId();
+
         var numberOfComponents = components.size();
         List<ComponentQuantityKey> componentQuantityKeys = new ArrayList<>();
         for (Component component : components) {
             componentQuantityKeys.add(new ComponentQuantityKey(orderId, component.getId()));
         }
+
         List<ComponentQuantity> componentQuantities = new ArrayList<>();
         for (int i = 0; i < numberOfComponents; i++) {
             componentQuantities.add(new ComponentQuantity(
                     componentQuantityKeys.get(i),
-                    order, 
+                    order,
                     components.get(i),
                     orderDTO.getQuantities().get(i)
             ));

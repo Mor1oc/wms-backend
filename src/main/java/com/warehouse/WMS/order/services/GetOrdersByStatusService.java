@@ -27,6 +27,11 @@ public class GetOrdersByStatusService implements Query<String, List<OrderDTO>> {
     public ResponseEntity<List<OrderDTO>> execute(String status) {
         logger.info("Преобразование статуса {} в id", status);
         Integer statusId = OrderStatus.fromStringToId(status);
+
+        if (statusId.equals(1)) {
+
+        }
+
         logger.info("Получение заказов со статутсом id {}", statusId);
         List<Order> orders = orderRepository.getAllByStatusId(statusId);
         List<OrderDTO> orderDTOs = orders.stream()

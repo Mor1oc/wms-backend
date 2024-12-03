@@ -7,23 +7,29 @@ import com.warehouse.WMS.order.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class UpdateOrderStatusService implements Command<UpdateOrderCommand, OrderDTO> {
+public class UpdateInProgressOrderService implements Command<Integer, OrderDTO> {
+
     private final OrderRepository orderRepository;
 
-    public UpdateOrderStatusService(OrderRepository orderRepository) {
+    public UpdateInProgressOrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
     @Override
-    public ResponseEntity<OrderDTO> execute(UpdateOrderCommand input) {
-        Optional<Order> optionalOrder = orderRepository.findById(input.id());
+    public ResponseEntity<OrderDTO> execute(Integer id) {
+        Optional<Order> optionalOrder = orderRepository.findById(id);
         if (optionalOrder.isPresent()) {
             Order order = optionalOrder.get();
-            var statusId = OrderStatus.fromStringToId(input.status().getTitle());
-            order.setStatus(new Status(statusId, input.status()));
+            var statusId = OrderStatus.fromStringToId(OrderStatus.IN_PROGRESS.getTitle());
+            order.setStatus(new Status(statusId, OrderStatus.IN_PROGRESS));
+            if (order.getOrderDate() == null) {
+                order.setOrderDate(LocalDate.now());
+                order.setDeliveryDate(LocalDate.now().plusDays(3));
+            }
             order = orderRepository.save(order);
             return ResponseEntity.ok(new OrderDTO(order));
         }

@@ -1,6 +1,5 @@
 package com.warehouse.WMS.exceptions;
 
-import com.warehouse.WMS.component.services.CreateAllComponentsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
