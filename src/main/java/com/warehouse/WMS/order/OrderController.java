@@ -1,5 +1,6 @@
 package com.warehouse.WMS.order;
 
+import com.warehouse.WMS.component.model.ComponentForecastDTO;
 import com.warehouse.WMS.order.model.OrderDTO;
 import com.warehouse.WMS.order.services.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,23 +9,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "OrderController", description = "CRUD methods with orders")
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 public class OrderController {
     private final GetOrdersService getOrdersService;
+    private final GetSupplyOrdersService getSupplyOrdersService;
+    private final DemandAnalysisOrderService demandAnalysisOrderService;
     private final CreateOrderService createOrderService;
     private final GetOrdersByStatusService getOrdersByStatusService;
     private final UpdateCompleteOrderService updateCompleteOrderService;
     private final UpdateInProgressOrderService updateInProgressOrderService;
 
-    public OrderController(GetOrdersService getOrdersService,
+    public OrderController(GetOrdersService getOrdersService, GetSupplyOrdersService getSupplyOrdersService, GetShipmentOrdersService getShipmentOrdersService, DemandAnalysisOrderService demandAnalysisOrderService,
                            CreateOrderService createOrderService,
                            GetOrdersByStatusService getOrdersByStatusService,
                            UpdateCompleteOrderService updateOrderInProgressService,
                            UpdateInProgressOrderService updateOrderPreparingService) {
         this.getOrdersService = getOrdersService;
+        this.getSupplyOrdersService = getSupplyOrdersService;
+        this.demandAnalysisOrderService = demandAnalysisOrderService;
         this.createOrderService = createOrderService;
         this.getOrdersByStatusService = getOrdersByStatusService;
         this.updateCompleteOrderService = updateOrderInProgressService;
@@ -35,6 +41,18 @@ public class OrderController {
     @GetMapping("/orders")
     public ResponseEntity<List<OrderDTO>> getOrders() {
         return getOrdersService.execute(null);
+    }
+
+    @Operation(summary = "Получить все приходы")
+    @GetMapping("/orders/supply")
+    public ResponseEntity<List<OrderDTO>> getSupplyOrders() {
+        return getSupplyOrdersService.execute(null);
+    }
+
+    @Operation(summary = "Данные о прогнозах")
+    @GetMapping("/orders/forecast")
+    public ResponseEntity<Map<String, List<ComponentForecastDTO>>> getForecastOrders() {
+        return demandAnalysisOrderService.execute(null);
     }
 
     @Operation(summary = "Создать заказ")

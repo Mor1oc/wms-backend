@@ -1,0 +1,29 @@
+package com.warehouse.WMS.warehouse.model;
+
+import com.warehouse.WMS.component.model.ComponentDTO;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+public class WarehouseAnalysisDTO {
+    private Integer id;
+    private int rack;
+    private int section;
+    private int shelf;
+    private int cell;
+    private int quantity;
+    private ComponentDTO component;
+    private int coverage;
+
+    public WarehouseAnalysisDTO(Warehouse warehouse) {
+        this.id = warehouse.getId();
+        this.rack = warehouse.getRack();
+        this.section = warehouse.getSection();
+        this.shelf = warehouse.getShelf();
+        this.cell = warehouse.getCell();
+        this.quantity = warehouse.getQuantity();
+        this.component = new ComponentDTO(warehouse.getComponent());
+        this.coverage = 0;
+    }
+}

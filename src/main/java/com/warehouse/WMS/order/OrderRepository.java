@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     List<Order> getAllByStatusId(Integer id);
+
+    List<Order> findOrdersByStatusId(int i);
 }

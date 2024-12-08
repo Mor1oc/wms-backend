@@ -2,14 +2,12 @@ package com.warehouse.WMS.order.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "orders")
 public class Order {
@@ -33,7 +31,7 @@ public class Order {
     private Status status;
 
     public Order() {
-
+        this.components = new ArrayList<>();
     }
 
     public Order(OrderDTO orderDTO) {
@@ -41,6 +39,15 @@ public class Order {
         this.orderDate = orderDTO.getOrderDate();
         this.deliveryDate = orderDTO.getDeliveryDate();
         this.components = new ArrayList<>();
-        this.status = new Status(1);
+        boolean temp = orderDTO.getStatus().equals("Запланирован");
+        this.status = new Status(temp ? 1 : 4, temp ? OrderStatus.PLANED : OrderStatus.PREPARING);
+    }
+
+    public Order(OrderDTO orderDTO, int statusId) {
+        this.id = orderDTO.getId();
+        this.orderDate = orderDTO.getOrderDate();
+        this.deliveryDate = orderDTO.getDeliveryDate();
+        this.components = new ArrayList<>();
+        this.status = new Status(statusId);
     }
 }

@@ -26,8 +26,7 @@ public class SaveNewOrderInWarehouseService implements Executable<Order, Void> {
     public Void execute(Order order) {
         Set<Integer> componentsIds = order.getComponents()
                 .stream()
-                .map(ComponentQuantity::getId)
-                .map(ComponentQuantityKey::getComponentId)
+                .map(componentQuantity -> componentQuantity.getComponent().getId())
                 .collect(Collectors.toSet());
 
         List<Warehouse> warehouses = warehouseRepository.findByComponentIdIn(componentsIds);
@@ -51,7 +50,12 @@ public class SaveNewOrderInWarehouseService implements Executable<Order, Void> {
                 .filter(component -> !componentIdsInDb.contains(component.getComponent().getId()))
                 .toList();
 
+        if (newComponents.isEmpty()) {
+            return null;
+        }
+
         var newWarehouses = new ArrayList<Warehouse>();
+
         for (ComponentQuantity componentQuantity : newComponents) {
             var category = componentQuantity.getComponent().getCategory();
             int rack = switch (category) {
@@ -76,6 +80,7 @@ public class SaveNewOrderInWarehouseService implements Executable<Order, Void> {
         }
 
         warehouseRepository.saveAll(newWarehouses);
+
         return null;
     }
 }

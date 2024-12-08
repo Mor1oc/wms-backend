@@ -1,4 +1,4 @@
-package com.warehouse.WMS.component.model;
+package com.warehouse.WMS.exceptions;
 
 public record ErrorResponse(String message) {
 }

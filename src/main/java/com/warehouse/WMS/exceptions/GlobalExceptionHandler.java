@@ -1,8 +1,6 @@
 package com.warehouse.WMS.exceptions;
 
-import com.warehouse.WMS.component.model.ErrorResponse;
 import jakarta.validation.ConstraintViolationException;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

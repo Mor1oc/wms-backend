@@ -4,8 +4,8 @@ public enum OrderStatus {
     PLANED("Запланирован"),
     IN_PROGRESS("В исполнении"),
     CANCELLED("Отменен"),
-    COMPLETED("Завершен"),
-    PREPARING("Готовится к отправке");
+    PREPARING("Готовится к отправке"),
+    COMPLETED("Завершен");
 
     private final String title;
 
@@ -22,8 +22,8 @@ public enum OrderStatus {
             case "Запланирован" -> PLANED;
             case "В исполнении" -> IN_PROGRESS;
             case "Отменен" -> CANCELLED;
-            case "Завершен" -> COMPLETED;
             case "Готовится к отправке" -> PREPARING;
+            case "Завершен" -> COMPLETED;
             default -> null;
         };
     }
@@ -32,16 +32,16 @@ public enum OrderStatus {
      * "Запланирован" -- 1
      * "В исполнении" -- 2
      * "Отменен" -- 3
-     * "Завершен" -- 4
-     * "Готовится к отправке" -- 5
+     * "Готовится к отправке" -- 4
+     * "Завершен" -- 5
      * */
     public static Integer fromStringToId(String status) {
         return switch (status) {
             case "Запланирован" -> 1;
             case "В исполнении" -> 2;
             case "Отменен" -> 3;
-            case "Завершен" -> 4;
-            case "Готовится к отправке" -> 5;
+            case "Готовится к отправке" -> 4;
+            case "Завершен" -> 5;
             default -> null;
         };
     }

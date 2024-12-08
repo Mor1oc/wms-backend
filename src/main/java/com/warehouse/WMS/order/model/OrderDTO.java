@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -39,5 +40,18 @@ public class OrderDTO {
                 .map(ComponentQuantity::getQuantity)
                 .reduce(0, Integer::sum);
         this.status = order.getStatus().getStatus().getTitle();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDTO orderDTO = (OrderDTO) o;
+        return totalQuantity == orderDTO.totalQuantity && Objects.equals(id, orderDTO.id) && Objects.equals(orderDate, orderDTO.orderDate) && Objects.equals(deliveryDate, orderDTO.deliveryDate) && Objects.equals(components, orderDTO.components) && Objects.equals(quantities, orderDTO.quantities) && Objects.equals(status, orderDTO.status);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, orderDate, deliveryDate, components, quantities, totalQuantity, status);
     }
 }

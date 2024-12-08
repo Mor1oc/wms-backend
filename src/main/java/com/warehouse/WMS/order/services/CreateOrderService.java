@@ -41,6 +41,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
 
     @Override
     public ResponseEntity<OrderDTO> execute(OrderDTO orderDTO) {
+        logger.info("Получение компонентов orderDTO : {}\n getComponents(): {}", orderDTO, orderDTO.getComponents());
         var orderComponents = orderDTO.getComponents();
         List<String> componentModels = orderComponents
                 .stream()
@@ -65,7 +66,7 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
                     .map(Component::new)
                     .filter((component) -> !(modelsInOrder.contains(component.getModel())))
                     .toList(); // Находим комплектующие, которых нет в базе данных
-            components = createAllComponentsService.execute(componentsNotInDb);
+            componentsNotInDb = createAllComponentsService.execute(componentsNotInDb);
             components.addAll(componentsNotInDb);
         }
 
@@ -76,9 +77,8 @@ public class CreateOrderService implements Command<OrderDTO, OrderDTO> {
 
         var numberOfComponents = components.size();
         List<ComponentQuantityKey> componentQuantityKeys = new ArrayList<>();
-        for (Component component : components) {
+        for (Component component : components)
             componentQuantityKeys.add(new ComponentQuantityKey(orderId, component.getId()));
-        }
 
         List<ComponentQuantity> componentQuantities = new ArrayList<>();
         for (int i = 0; i < numberOfComponents; i++) {

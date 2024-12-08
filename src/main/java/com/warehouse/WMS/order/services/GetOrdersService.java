@@ -17,11 +17,9 @@ public class GetOrdersService implements Command<Void, List<OrderDTO>> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetOrdersService.class);
 
-
     public GetOrdersService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
-
 
     @Override
     public ResponseEntity<List<OrderDTO>> execute(Void input) {

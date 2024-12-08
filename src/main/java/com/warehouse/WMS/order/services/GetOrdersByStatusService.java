@@ -16,22 +16,26 @@ import java.util.List;
 public class GetOrdersByStatusService implements Query<String, List<OrderDTO>> {
 
     private final OrderRepository orderRepository;
+    private final AutoCreatingNewOrderService autoCreatingNewOrderService;
 
     private static final Logger logger = LoggerFactory.getLogger(GetOrdersByStatusService.class);
 
-    public GetOrdersByStatusService(OrderRepository orderRepository) {
+    public GetOrdersByStatusService(OrderRepository orderRepository,
+                                    AutoCreatingNewOrderService autoCreatingNewOrderService) {
         this.orderRepository = orderRepository;
+        this.autoCreatingNewOrderService = autoCreatingNewOrderService;
     }
 
     @Override
     public ResponseEntity<List<OrderDTO>> execute(String status) {
         logger.info("Преобразование статуса {} в id", status);
-        Integer statusId = OrderStatus.fromStringToId(status);
 
-        if (statusId.equals(1)) {
-
+        if (status.equals("Запланирован")) {
+            logger.info("Анализ запасов для автоматического создания заказов");
+            autoCreatingNewOrderService.execute(null);
         }
 
+        Integer statusId = OrderStatus.fromStringToId(status);
         logger.info("Получение заказов со статутсом id {}", statusId);
         List<Order> orders = orderRepository.getAllByStatusId(statusId);
         List<OrderDTO> orderDTOs = orders.stream()
