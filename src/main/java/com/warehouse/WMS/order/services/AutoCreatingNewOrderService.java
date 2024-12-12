@@ -41,8 +41,7 @@ public class AutoCreatingNewOrderService implements Executable<Void, Void> {
         List<ComponentQuantity> componentQuantitiesInDB = componentQuantityRepository.findAllByComponentIdIn(componentIds);
 
         componentQuantitiesInDB = componentQuantitiesInDB.stream()
-                .filter(componentQuantity -> componentQuantity.getOrder().getStatus().getStatus().equals(OrderStatus.PLANED)
-                )
+                .filter(componentQuantity -> componentQuantity.getOrder().getStatus().getStatus().equals(OrderStatus.PLANED))
                 .toList();
 
         Set<Integer> componentsIdsInDb = componentQuantitiesInDB.stream()

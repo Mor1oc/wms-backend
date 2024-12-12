@@ -26,7 +26,7 @@ public class DemandAnalysisOrderService implements Query<Void, Map<String, List<
     @Override
     public ResponseEntity<Map<String, List<ComponentForecastDTO>>> execute(Void input) {
         List<OrderDTO> orders = getShipmentOrdersService.execute(null);
-        logger.info(orders.toString());
+//        logger.info(orders.toString());
 
         LocalDate oneMonth = LocalDate.of(2024,12,1).minusMonths(1);
         LocalDate twoMonth = LocalDate.of(2024,12,1).minusMonths(2);

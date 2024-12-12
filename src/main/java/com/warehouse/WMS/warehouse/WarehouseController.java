@@ -9,6 +9,7 @@ import com.warehouse.WMS.warehouse.services.UpdateWarehouseQuantityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,18 +32,21 @@ public class WarehouseController {
 
     @Operation(summary = "Получить все запасы со склада")
     @GetMapping("/warehouse")
+    @PreAuthorize("hasRole('ROLE_Кладовщик') or hasRole('ROLE_Менеджер') or hasRole('ROLE_Аналитик')")
     public ResponseEntity<List<WarehouseDTO>> getComponentsInStock() {
         return getWarehousesService.execute(null);
     }
 
     @Operation(summary = "Изменить количество комплектующего на складе")
     @PutMapping("/warehouse/{id}")
+    @PreAuthorize("hasRole('ROLE_Кладовщик')")
     public ResponseEntity<Integer> updateOrderToComplete(@PathVariable Integer id, @RequestBody Integer quantity) {
         return updateQuantityWarehouseService.execute(new UpdateWarehouseQuantityCommand(id, quantity));
     }
 
     @Operation(summary = "Получить проанализированные запасы")
     @GetMapping("/warehouse/analysis")
+    @PreAuthorize("hasRole('ROLE_Аналитик')")
     public ResponseEntity<List<WarehouseAnalysisDTO>> getAnalysisWarehouses() {
         return stockAnalysisService.execute(null);
     }

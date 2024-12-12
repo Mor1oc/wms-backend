@@ -6,6 +6,7 @@ import com.warehouse.WMS.order.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,42 +40,49 @@ public class OrderController {
 
     @Operation(summary = "Получить все заказы")
     @GetMapping("/orders")
+    @PreAuthorize("hasRole('ROLE_Кладовщик')")
     public ResponseEntity<List<OrderDTO>> getOrders() {
         return getOrdersService.execute(null);
     }
 
     @Operation(summary = "Получить все приходы")
     @GetMapping("/orders/supply")
+    @PreAuthorize("hasRole('ROLE_Кладовщик')")
     public ResponseEntity<List<OrderDTO>> getSupplyOrders() {
         return getSupplyOrdersService.execute(null);
     }
 
     @Operation(summary = "Данные о прогнозах")
     @GetMapping("/orders/forecast")
+    @PreAuthorize("hasRole('ROLE_Аналитик')")
     public ResponseEntity<Map<String, List<ComponentForecastDTO>>> getForecastOrders() {
         return demandAnalysisOrderService.execute(null);
     }
 
     @Operation(summary = "Создать заказ")
     @PostMapping("/order")
+    @PreAuthorize("hasRole('ROLE_Менеджер') or hasRole('ROLE_Аналитик') or hasRole('ROLE_Кладовщик')")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         return createOrderService.execute(orderDTO);
     }
 
     @Operation(summary = "Получить все заказы c определенным статусом")
     @GetMapping("/orders/status")
+    @PreAuthorize("hasRole('ROLE_Менеджер') or hasRole('ROLE_Аналитик') or hasRole('ROLE_Кладовщик')")
     public ResponseEntity<List<OrderDTO>> getOrderByStatus(@RequestParam String status) {
         return getOrdersByStatusService.execute(status);
     }
 
     @Operation(summary = "Изменить статус заказа на 'Завершен'")
     @PutMapping("/order/complete/{id}")
+    @PreAuthorize("hasRole('ROLE_Кладовщик')")
     public ResponseEntity<OrderDTO> updateOrderToComplete(@PathVariable Integer id) {
         return updateCompleteOrderService.execute(id);
     }
 
     @Operation(summary = "Изменить статус заказа на 'В исполении'")
     @PutMapping("/order/in-progress/{id}")
+    @PreAuthorize("hasRole('ROLE_Менеджер')")
     public ResponseEntity<OrderDTO> updateOrderToInProgress(@PathVariable Integer id) {
         return updateInProgressOrderService.execute(id);
     }
